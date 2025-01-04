@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Linq;
 using StateMachine.Parameters;
 using UnityEngine;
+using static UnityEngine.Rendering.DebugUI;
 
 namespace StateMachine
 {
@@ -61,6 +63,26 @@ namespace StateMachine
             GetParameterByName(name).Value = value;
         }
         
+        public void SetTrigger(string name)
+        {
+            var param = GetParameterByName(name);
+            if(param.GetType() == typeof(TriggerParameter))
+            {
+                var triggerParameter = param as TriggerParameter;
+                triggerParameter.Trigger();
+            }
+        }
+
+        public object GetParameterValue(string name)
+        {
+            foreach (var parameter in _parameters)
+            {
+                if (parameter.Name == name)
+                    return parameter.Value;
+            }
+            return null;
+        }
+
         private Parameters.Parameter GetParameterByName(string name)
         {
             foreach(var parameter in _parameters)

@@ -17,7 +17,7 @@ public class GameSetUpUIBehaviour : MonoBehaviour
     public TeamCreationUIBehaviour TeamCreatorPrefab;
     public LayoutGroup TeamDisplay;
 
-    private TeamCreationUIBehaviour _activeTeamColorChange;
+    private TeamCreationUIBehaviour _activeTeamColorChange;    
 
 
     public void Awake()
@@ -27,7 +27,10 @@ public class GameSetUpUIBehaviour : MonoBehaviour
         for(int i = 0; i < Enum.GetValues(typeof(QuestionType)).Length; i++) 
         {
             CategorySelection.options.Add(new TMP_Dropdown.OptionData(((QuestionType)i).ToString()));
-        }        
+        }
+
+        CategorySelection.value = 0;
+
         NumberOfTeams.options.Clear();
         for(int i = 1; i <= 5;  i++) 
         {
@@ -35,7 +38,7 @@ public class GameSetUpUIBehaviour : MonoBehaviour
         }
 
         NumberOfTeams.onValueChanged.AddListener(UpdateTeamsView);
-        NumberOfTeams.value = 0;
+        NumberOfTeams.value = 0;        
 
         ColorUIBehaviour.OnColorSelected.AddListener(SetTeamColor);
         ColorSelectUIRef.SetActive(false);
@@ -88,5 +91,10 @@ public class GameSetUpUIBehaviour : MonoBehaviour
             retValue.Add(teamCreationObject.ExtractTeam());
         }
         return retValue;
+    }
+
+    public QuestionType GetQuestionCategory()
+    {
+        return (QuestionType)Enum.Parse(typeof(QuestionType), CategorySelection.options[CategorySelection.value].text);
     }
 }

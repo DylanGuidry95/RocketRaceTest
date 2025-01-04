@@ -3,7 +3,8 @@ using UnityEngine;
 
 public class QuestionObject
 {
-    public AudioClip CorrectAnswer;
-    public AudioClip[] Distractors;
+    public string QuestionPrompt;
+    public AnswerObject CorrectAnswer;
+    public AnswerObject[] Distractors;
     public bool PassedValidation => !Distractors.Contains(CorrectAnswer);
 }
