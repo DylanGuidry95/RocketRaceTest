@@ -21,12 +21,16 @@ public class GameManager : MonoBehaviour
     private ReviewQuestion _reveiewQuestionState;
     private RoundEnd _roundEndState;
     private GameOver _gameOverState;
+    private OutOfTimeState _outOfTimeState;
 
     private QuestionType _activeCategory;
 
     [Header("Game Config")]
     public int NumberOfRounds;
+    private int _currentRound;
     public float RoundTimeLimit;
+    public int PointsForCorrectAnswer;
+    public int PointsForIncorrectAnswer;
     private float _activeRoundTimer;
 
     [Header("Scene Refs")]
@@ -39,11 +43,17 @@ public class GameManager : MonoBehaviour
     public GameObject GameSetUp;
     public GameObject GamePrep;
     public GameObject MainGame;
+    public GameObject ReviewScreen;
+    public GameObject GameOverScreen;
 
     public QuestionUIBehaviour QuestionUI;
     
     private GameSetUpUIBehaviour _setUpBeahiourRef => GameSetUp.GetComponent<GameSetUpUIBehaviour>();
     private QuestionBuilder _questionBuilder => FindObjectOfType<QuestionBuilder>();
+    private RoundOverUIBehaviour _roundBreak => FindObjectOfType<RoundOverUIBehaviour>();
+    private ReviewScreenUIBehaviour _reviewScreen => ReviewScreen.GetComponent<ReviewScreenUIBehaviour>();
+
+    private string Feedback => (_activeTeam.IsBoosted) ? "CORRECT" : "INCORRECT";
 
     private void DisplayQuestion()
     {        
@@ -53,22 +63,39 @@ public class GameManager : MonoBehaviour
 
     private void SubmitAnswer(AnswerObject answer)
     {        
+        _activeTeam.CurrentScore += _activeQuestion.CorrectAnswer == answer ? PointsForCorrectAnswer : PointsForIncorrectAnswer;
         _activeTeam.IsBoosted = _activeQuestion.CorrectAnswer == answer;
         _gameFlow.SetTrigger("QuestionAnswered");
+    }
+
+    private void GetNextTeam()
+    {
+        if (_activeTeam == _teams.Last())
+        {
+            _activeTeam = _teams.First();
+            _gameFlow.SetTrigger("IsRoundComplete");
+            _currentRound++;            
+        }
+        else
+        {
+            _activeTeam = _teams[_teams.IndexOf(_activeTeam) + 1];
+            _gameFlow.SetTrigger("NextQuestion");
+        }
     }
 
     private void InitializeGameFlow()
     {
         _gameFlow = new GGD_StateMachine();
-
-        IntParameter _currentRound;
-        IntParameter _currentTeam;
+        
         FloatParameter _currentRoundTimeRemaing;
+        TriggerParameter _gameComplete;
+        TriggerParameter _roundComplete;
         TriggerParameter _menuTrigger; //Trigger to go back to main menu
         TriggerParameter _setUpGameTrigger; //Trigger to go to game set up        
         TriggerParameter _startGameTrigger; //Trigger to start the game
         TriggerParameter _readyNextQuestionTrigger; //Trigger to get next question
         TriggerParameter _questionAnsweredTrigger; //Tigger for question answered
+        TriggerParameter _reviewCompleteTrigger;
 
         //Define Conditions
         var menuCondition = new Condition(_menuTrigger = new TriggerParameter("ToMenu"), ConditionOperations.equals_to, true);
@@ -77,10 +104,11 @@ public class GameManager : MonoBehaviour
         var startGameCondition = new Condition(_startGameTrigger = new TriggerParameter("ToGameStart"), ConditionOperations.equals_to, true);
 
         var timerCondition = new Condition(_currentRoundTimeRemaing = new FloatParameter("timer", RoundTimeLimit), ConditionOperations.less_than_or_equals_to, 0);
-        var roundComplete = new Condition(_currentTeam = new IntParameter("TeamId", 0), ConditionOperations.equals_to, _teams.Count - 1);
-        var roundLimitReachedCondition = new Condition(_currentRound = new IntParameter("round", 0), ConditionOperations.greater_than_or_equals_to, _teams.Count);        
+        var roundComplete = new Condition(_roundComplete = new TriggerParameter("IsRoundComplete"), ConditionOperations.equals_to, true);
+        var roundLimitReachedCondition = new Condition(_gameComplete = new TriggerParameter("GameOver"), ConditionOperations.equals_to, true);        
         var readyNextQuestionCondition = new Condition(_readyNextQuestionTrigger = new TriggerParameter("NextQuestion"), ConditionOperations.equals_to, true);
         var questionAnsweredCondition = new Condition(_questionAnsweredTrigger = new TriggerParameter("QuestionAnswered"), ConditionOperations.equals_to, true);
+        var reviewCompleteCondition = new Condition(_reviewCompleteTrigger = new TriggerParameter("ReviewComplete"), ConditionOperations.equals_to, true);
 
         //Define Transitions
         _gameFlow.DefineTransition(_mainMenuState = new MainMenu(), _teamSetupState = new TeamSetup(), new[] { setUpCondition });
@@ -89,23 +117,28 @@ public class GameManager : MonoBehaviour
         _gameFlow.DefineTransition(_teamSetupState, _gamePrepState = new GamePrep(), new[] { startGameCondition });
         _gameFlow.DefineTransition(_gamePrepState, _activeQuestionState = new ActiveQuestion(), new[] { readyNextQuestionCondition });
 
-        _gameFlow.DefineTransition(_activeQuestionState , _reveiewQuestionState = new ReviewQuestion(), new[] { timerCondition });
-        _gameFlow.DefineTransition(_activeQuestionState, _reveiewQuestionState = new ReviewQuestion(), new[] { questionAnsweredCondition }, 1);
-        _gameFlow.DefineTransition(_reveiewQuestionState, _roundEndState = new RoundEnd(), new[] { roundComplete });
-        _gameFlow.DefineTransition(_reveiewQuestionState, _activeQuestionState, new[] { readyNextQuestionCondition });
+        _gameFlow.DefineTransition(_activeQuestionState , _outOfTimeState = new OutOfTimeState(), new[] { timerCondition });
+        _gameFlow.DefineTransition(_activeQuestionState, _reveiewQuestionState = new ReviewQuestion(), new[] { questionAnsweredCondition });
+
+        _gameFlow.DefineTransition(_outOfTimeState, _roundEndState = new RoundEnd(), new[] { roundComplete, reviewCompleteCondition }, 1);
+        _gameFlow.DefineTransition(_outOfTimeState, _activeQuestionState, new[] { readyNextQuestionCondition, reviewCompleteCondition });
+
+        _gameFlow.DefineTransition(_reveiewQuestionState, _roundEndState = new RoundEnd(), new[] { roundComplete, reviewCompleteCondition }, 1);
+        _gameFlow.DefineTransition(_reveiewQuestionState, _activeQuestionState, new[] { readyNextQuestionCondition, reviewCompleteCondition });
 
         _gameFlow.DefineTransition(_roundEndState, _gameOverState = new GameOver(), new[] { roundLimitReachedCondition }, 1);
         _gameFlow.DefineTransition(_roundEndState, _activeQuestionState, new[] { readyNextQuestionCondition });        
 
         //Add Parameters
-        _gameFlow.AddParameter(_currentRound);
-        _gameFlow.AddParameter(_currentTeam);
+        _gameFlow.AddParameter(_gameComplete);
+        _gameFlow.AddParameter(_roundComplete);
         _gameFlow.AddParameter(_currentRoundTimeRemaing);
         _gameFlow.AddParameter(_menuTrigger);
         _gameFlow.AddParameter(_setUpGameTrigger);
         _gameFlow.AddParameter(_startGameTrigger);
         _gameFlow.AddParameter(_readyNextQuestionTrigger);
         _gameFlow.AddParameter(_questionAnsweredTrigger);
+        _gameFlow.AddParameter(_reviewCompleteTrigger);
     }
 
     public void Awake()
@@ -124,7 +157,12 @@ public class GameManager : MonoBehaviour
             _activeCategory = _setUpBeahiourRef.GetQuestionCategory();
         };
 
-        _gamePrepState.OnStateEnter = () => GamePrep.SetActive(true);
+        _gamePrepState.OnStateEnter = () =>
+        {
+            GamePrep.SetActive(true);
+            _roundBreak.BuildDisplay(_teams.ToArray(), PointsForCorrectAnswer * NumberOfRounds);
+        };
+
         _gamePrepState.OnStateExit = () =>
         {
             GamePrep.SetActive(false);
@@ -143,6 +181,44 @@ public class GameManager : MonoBehaviour
             MainGame.SetActive(true);
         };
         _activeQuestionState.OnStateUpdate = () => { _gameFlow.SetParameter("timer", _activeRoundTimer -= Time.deltaTime); };
+        _activeQuestionState.OnStateExit = () =>
+        {
+            MainGame.SetActive(false);
+            QuestionUI.ClearScreen();
+        };
+
+        _reveiewQuestionState.OnStateEnter = () =>
+        {
+            ReviewScreen.gameObject.SetActive(true);
+            _reviewScreen.UpdateFeedback(Feedback, _activeTeam);
+        };
+        _reveiewQuestionState.OnStateExit = () =>
+        {
+            ReviewScreen.gameObject.SetActive(false);            
+        };
+
+        _outOfTimeState.OnStateEnter = () =>
+        {
+            ReviewScreen.gameObject.SetActive(true);
+            _reviewScreen.UpdateFeedback("OUT OF TIME", _activeTeam);
+        };
+        _outOfTimeState.OnStateExit = () =>
+        {
+            ReviewScreen.gameObject.SetActive(false);
+            
+        };
+
+        _roundEndState.OnStateEnter = () =>
+        {
+            GamePrep.SetActive(true);
+            _roundBreak.UpdateDisplays();
+        };
+        _roundEndState.OnStateExit = () =>
+        {
+            GamePrep.SetActive(false);            
+        };
+
+        _gameOverState.OnStateEnter = () => GameOverScreen.SetActive(true);
 
         GameSetUpButton.onClick.AddListener(() => _gameFlow.SetTrigger("ToGameSetUp"));
 
@@ -154,11 +230,21 @@ public class GameManager : MonoBehaviour
         });
 
         ReadyQuestionButton.onClick.AddListener(() => {
+            if (_currentRound >= NumberOfRounds)
+            {
+                _gameFlow.SetTrigger("GameOver");
+                return;
+            }
             _gameFlow.SetTrigger("NextQuestion");
-        });
+        });        
         
 
         AnswerUIBehaviour.QuestionAnswered.AddListener(SubmitAnswer);
+        _reviewScreen.ProceedButton.onClick.AddListener(() => 
+        {
+            _gameFlow.SetTrigger("ReviewComplete");
+            GetNextTeam();
+        });
     }
 
     private void Start()

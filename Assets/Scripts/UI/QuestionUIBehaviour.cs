@@ -34,4 +34,13 @@ public class QuestionUIBehaviour : MonoBehaviour
             _activeAnswers.Add(newAnsObject);
         }
     }
+
+    public void ClearScreen()
+    {
+        foreach(var ans in _activeAnswers)
+        {
+            Destroy(ans.gameObject);
+        }
+        _activeAnswers.Clear();
+    }
 }
