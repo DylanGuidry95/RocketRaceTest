@@ -1,0 +1,40 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f844e4074db275d4688e7459437eef30, type: 3}
+  m_Name: ChordAnswers
+  m_EditorClassIdentifier: 
+  QuestionTypeLink: 1
+  AnswerBank:
+  - {fileID: 8300000, guid: b4977a95149d9d14bb23bef4b419714e, type: 3}
+  - {fileID: 8300000, guid: 9c74c5c5db1de5e4fb55d9c3e2e868c5, type: 3}
+  - {fileID: 8300000, guid: 9495cca680eb6ad408022624dada441c, type: 3}
+  - {fileID: 8300000, guid: 6773d5aebcf7c0c4698ae623ca9a6c74, type: 3}
+  - {fileID: 8300000, guid: e31409266d8ee0e489bbcc789591ae27, type: 3}
+  - {fileID: 8300000, guid: f6f0603ea3a4ea7478fd0f4c5ed2ddb4, type: 3}
+  - {fileID: 8300000, guid: 0936f1ab22f8b4243a72262c08eee8b3, type: 3}
+  - {fileID: 8300000, guid: bfb21fdce11a0714db33c722c8ffb8ec, type: 3}
+  - {fileID: 8300000, guid: e38a5ec5a4b453848a3cedec36afca30, type: 3}
+  - {fileID: 8300000, guid: 63da292a1ada58c41ba1a896090ac488, type: 3}
+  - {fileID: 8300000, guid: ebbd8c9b7e009a14a9a84dbe0cbadcd9, type: 3}
+  - {fileID: 8300000, guid: 594757f39bb817841af6f0319f1d0df1, type: 3}
+  - {fileID: 8300000, guid: c78d05607e2bfbe47ac65c5acd735887, type: 3}
+  - {fileID: 8300000, guid: 093710f5f22464244aecd98ffac75738, type: 3}
+  - {fileID: 8300000, guid: 3c25502a89dfd5f40b2aaa3eff0077d2, type: 3}
+  - {fileID: 8300000, guid: 8af0b35252e688b48833f667e8fbe5a0, type: 3}
+  - {fileID: 8300000, guid: 3d6000bffbcf610409cf17155411e380, type: 3}
+  - {fileID: 8300000, guid: 4230576dcc82dc540ad3e8efd9df92cd, type: 3}
+  - {fileID: 8300000, guid: 3d2db6ac54468a24282f49b0475b2423, type: 3}
+  - {fileID: 8300000, guid: 01d215bb48cebfd4ab5a5800b85aef11, type: 3}
+  - {fileID: 8300000, guid: ae1e3bca262bb884a9144b55381c4b81, type: 3}
+  - {fileID: 8300000, guid: 03e82a8ce760433418422efb9f0529db, type: 3}
+  - {fileID: 8300000, guid: 76f1b3b2b26d553478c2b1ad4b0ef27d, type: 3}
+  - {fileID: 8300000, guid: 7d26e00c044090545a35c29082852dfe, type: 3}
