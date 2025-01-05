@@ -9,6 +9,7 @@ public class RoundOverUIBehaviour : MonoBehaviour
     public LayoutGroup ProgressGroup;
 
     private List<TeamProgressUIBehaviour> _progressDisplays;
+    public Button ContinueButton;    
 
     public void BuildDisplay(TeamObject[] teams, int maxPoints)
     { 
@@ -27,5 +28,15 @@ public class RoundOverUIBehaviour : MonoBehaviour
         {
             team.UpdateDisplay();
         }
+    }
+
+    private void Update()
+    {
+        ContinueButton.interactable = true;
+        foreach (var team in _progressDisplays) 
+        {
+            if(!team.DoneUpdate)
+                ContinueButton.interactable = false;
+        }                
     }
 }

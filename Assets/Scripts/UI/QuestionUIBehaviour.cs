@@ -20,9 +20,8 @@ public class QuestionUIBehaviour : MonoBehaviour
         QuestionHeader.text = question.QuestionPrompt;
         var answers = new List<AnswerObject>() { question.CorrectAnswer };
         answers.AddRange(question.Distractors);
-
-        var sysRandom = new System.Random();
-        var shuffledAnswers = answers.OrderBy(item => sysRandom.Next()).ToList();
+        
+        var shuffledAnswers = answers.OrderBy(item => GameManager.GlobalRandomSeed.Next()).ToList();
 
         if (_activeAnswers == null)
             _activeAnswers = new List<AnswerUIBehaviour>();

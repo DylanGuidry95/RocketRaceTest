@@ -8,7 +8,7 @@ using StateMachine;
 using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
-{    
+{        
     private List<TeamObject> _teams;
     private TeamObject _activeTeam;    
     private QuestionObject _activeQuestion;
@@ -47,12 +47,17 @@ public class GameManager : MonoBehaviour
     public GameObject GameOverScreen;
 
     public QuestionUIBehaviour QuestionUI;
-    
+
+    public AudioSource BackgroundAudio;
+
+    private Coroutine _audioRoutine;
+
+    public static System.Random GlobalRandomSeed;
+
     private GameSetUpUIBehaviour _setUpBeahiourRef => GameSetUp.GetComponent<GameSetUpUIBehaviour>();
     private QuestionBuilder _questionBuilder => FindObjectOfType<QuestionBuilder>();
     private RoundOverUIBehaviour _roundBreak => FindObjectOfType<RoundOverUIBehaviour>();
     private ReviewScreenUIBehaviour _reviewScreen => ReviewScreen.GetComponent<ReviewScreenUIBehaviour>();
-
     private string Feedback => (_activeTeam.IsBoosted) ? "CORRECT" : "INCORRECT";
 
     private void DisplayQuestion()
@@ -143,6 +148,7 @@ public class GameManager : MonoBehaviour
 
     public void Awake()
     {
+        GlobalRandomSeed = new System.Random(UnityEngine.Random.Range(0,999999999));        
         _teams = new List<TeamObject>();
 
         InitializeGameFlow();
@@ -165,26 +171,31 @@ public class GameManager : MonoBehaviour
 
         _gamePrepState.OnStateExit = () =>
         {
-            GamePrep.SetActive(false);
-            var sysRandom = new System.Random();
-            var shuffleTeams = _teams.OrderBy(item => sysRandom.Next()).ToList();
+            GamePrep.SetActive(false);            
+            var shuffleTeams = _teams.OrderBy(item => GlobalRandomSeed.Next()).ToList();
             _teams = shuffleTeams;
             _activeTeam = _teams[0];            
         };
 
         _activeQuestionState.OnStateEnter = () =>
         {
+            BackgroundAudio.Pause();
             Debug.Log("Active Team " + _activeTeam.TeamName);
             _gameFlow.SetParameter("timer", RoundTimeLimit);
             _activeRoundTimer = RoundTimeLimit;
             DisplayQuestion();
             MainGame.SetActive(true);
+            _audioRoutine = StartCoroutine(_questionBuilder.AudioPlay(2, RoundTimeLimit / _activeQuestion.CorrectAnswer.Audio.length));
         };
         _activeQuestionState.OnStateUpdate = () => { _gameFlow.SetParameter("timer", _activeRoundTimer -= Time.deltaTime); };
         _activeQuestionState.OnStateExit = () =>
         {
+            BackgroundAudio.Play();
             MainGame.SetActive(false);
             QuestionUI.ClearScreen();
+            StopCoroutine(_audioRoutine);
+            _audioRoutine = null;
+            _questionBuilder.AnswerAudioSource.Stop();
         };
 
         _reveiewQuestionState.OnStateEnter = () =>
