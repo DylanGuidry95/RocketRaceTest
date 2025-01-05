@@ -8,8 +8,9 @@ using UnityEngine.Events;
 public class TeamProgressUIBehaviour : MonoBehaviour
 {
     public Slider ProgressIndicator;
+    public Image Rocket;
     public TextMeshProUGUI TeamLabel;
-    private TeamObject _linkedTeam;
+    private TeamObject _linkedTeam;    
 
     public bool DoneUpdate;    
 
@@ -17,6 +18,7 @@ public class TeamProgressUIBehaviour : MonoBehaviour
     {
         _linkedTeam = data;
         TeamLabel.text = data.TeamName;
+        Rocket.color = data.TeamColor;
         ProgressIndicator.maxValue = maxProgress;
         ProgressIndicator.minValue = 0;
         DoneUpdate = true;
