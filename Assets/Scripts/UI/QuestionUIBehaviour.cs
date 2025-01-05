@@ -4,7 +4,6 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UIElements;
 using UnityEngine.UI;
-using static UnityEditor.Progress;
 using System.Linq;
 
 public class QuestionUIBehaviour : MonoBehaviour

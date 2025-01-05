@@ -22,7 +22,7 @@ public class TeamProgressUIBehaviour : MonoBehaviour
         Rocket.color = data.TeamColor;
         ProgressIndicator.maxValue = maxProgress;
         ProgressIndicator.minValue = 0;
-        DoneUpdate = true;
+        DoneUpdate = true;        
     }
 
     public void UpdateDisplay()

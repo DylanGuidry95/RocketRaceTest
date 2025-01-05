@@ -9,6 +9,8 @@ public class GameSetUpUIBehaviour : MonoBehaviour
 {
     public TMP_Dropdown CategorySelection;
     public TMP_Dropdown NumberOfTeams;
+    public TMP_Dropdown NumRounds;
+    public TMP_Dropdown RoundDuration;
 
     public GameObject ColorSelectUIRef;
     private ColorUIBehaviour ColorUIBehaviour => ColorSelectUIRef.GetComponentInChildren<ColorUIBehaviour>();
@@ -42,6 +44,18 @@ public class GameSetUpUIBehaviour : MonoBehaviour
 
         ColorUIBehaviour.OnColorSelected.AddListener(SetTeamColor);
         ColorSelectUIRef.SetActive(false);
+
+        RoundDuration.options.Clear();
+        for(int i = 10; i <= 120; i+=10)
+        {
+            RoundDuration.options.Add(new TMP_Dropdown.OptionData(i.ToString()));
+        }
+
+        NumRounds.options.Clear();
+        for (int i = 1; i <= 10; i++)
+        {
+            NumRounds.options.Add(new TMP_Dropdown.OptionData(i.ToString()));
+        }
     }
 
     public void Start()
@@ -96,6 +110,16 @@ public class GameSetUpUIBehaviour : MonoBehaviour
     public QuestionType GetQuestionCategory()
     {
         return (QuestionType)Enum.Parse(typeof(QuestionType), CategorySelection.options[CategorySelection.value].text);
+    }
+
+    public int GetNumRounds()
+    {
+        return int.Parse(NumRounds.options[NumRounds.value].text);
+    }
+
+    public int GetRoundDuration()
+    {
+        return int.Parse(RoundDuration.options[RoundDuration.value].text);
     }
 
     public void ClearScreen()

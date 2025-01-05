@@ -40,6 +40,7 @@ public class GameManager : MonoBehaviour
     public Button ReadyQuestionButton;
     public Button ExitGameButton;
     public Button ResetGameButton;
+    public Slider RoundTimer;
 
     public GameObject MainMenu;
     public GameObject GameSetUp;
@@ -53,6 +54,7 @@ public class GameManager : MonoBehaviour
     public AudioSource BackgroundAudio;
 
     private Coroutine _audioRoutine;
+    private Coroutine _timerRoutine;
 
     public static System.Random GlobalRandomSeed;
 
@@ -131,7 +133,7 @@ public class GameManager : MonoBehaviour
         _gameFlow.DefineTransition(_outOfTimeState, _roundEndState = new RoundEnd(), new[] { roundComplete, reviewCompleteCondition }, 1);
         _gameFlow.DefineTransition(_outOfTimeState, _activeQuestionState, new[] { readyNextQuestionCondition, reviewCompleteCondition });
 
-        _gameFlow.DefineTransition(_reveiewQuestionState, _roundEndState = new RoundEnd(), new[] { roundComplete, reviewCompleteCondition }, 1);
+        _gameFlow.DefineTransition(_reveiewQuestionState, _roundEndState, new[] { roundComplete, reviewCompleteCondition }, 1);
         _gameFlow.DefineTransition(_reveiewQuestionState, _activeQuestionState, new[] { readyNextQuestionCondition, reviewCompleteCondition });
 
         _gameFlow.DefineTransition(_roundEndState, _gameOverState = new GameOver(), new[] { roundLimitReachedCondition }, 1);
@@ -184,7 +186,9 @@ public class GameManager : MonoBehaviour
             GamePrep.SetActive(false);            
             var shuffleTeams = _teams.OrderBy(item => GlobalRandomSeed.Next()).ToList();
             _teams = shuffleTeams;
-            _activeTeam = _teams[0];            
+            _activeTeam = _teams[0];
+            NumberOfRounds = _setUpBeahiourRef.GetNumRounds();
+            RoundTimeLimit = _setUpBeahiourRef.GetRoundDuration();
         };
 
         _activeQuestionState.OnStateEnter = () =>
@@ -195,7 +199,8 @@ public class GameManager : MonoBehaviour
             _activeRoundTimer = RoundTimeLimit;
             DisplayQuestion();
             MainGame.SetActive(true);
-            _audioRoutine = StartCoroutine(_questionBuilder.AudioPlay(2, RoundTimeLimit / _activeQuestion.CorrectAnswer.Audio.length));
+            _audioRoutine = StartCoroutine(_questionBuilder.AudioPlay(0.5f, RoundTimeLimit / _activeQuestion.CorrectAnswer.Audio.length));
+            _timerRoutine = StartCoroutine(RoundTimerRoutine());
         };
         _activeQuestionState.OnStateUpdate = () => { _gameFlow.SetParameter("timer", _activeRoundTimer -= Time.deltaTime); };
         _activeQuestionState.OnStateExit = () =>
@@ -204,6 +209,7 @@ public class GameManager : MonoBehaviour
             MainGame.SetActive(false);
             QuestionUI.ClearScreen();
             StopCoroutine(_audioRoutine);
+            StopCoroutine(_timerRoutine);
             _audioRoutine = null;
             _questionBuilder.AnswerAudioSource.Stop();
         };
@@ -225,8 +231,7 @@ public class GameManager : MonoBehaviour
         };
         _outOfTimeState.OnStateExit = () =>
         {
-            ReviewScreen.gameObject.SetActive(false);
-            
+            ReviewScreen.gameObject.SetActive(false);            
         };
 
         _roundEndState.OnStateEnter = () =>
@@ -287,5 +292,22 @@ public class GameManager : MonoBehaviour
     private void Update()
     {
         _gameFlow.Update();        
+    }
+
+    private IEnumerator RoundTimerRoutine()
+    {
+        var elapsedTime = 0f;
+        RoundTimer.maxValue = RoundTimeLimit;
+        RoundTimer.minValue = 0;
+        RoundTimer.value = 0;
+        while (elapsedTime < RoundTimeLimit)
+        {
+            elapsedTime += Time.deltaTime;
+            RoundTimer.value = elapsedTime;
+            yield return null; // Wait for the next frame
+        }
+
+        // Ensure the value exactly matches the target at the end
+        RoundTimer.value = RoundTimeLimit;
     }
 }

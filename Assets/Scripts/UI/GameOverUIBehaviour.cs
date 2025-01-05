@@ -23,6 +23,7 @@ public class GameOverUIBehaviour : MonoBehaviour
             var newTeamDisplay = Instantiate(TeamGameOverDisplayPrefab, StandingsLayout.transform);
             var currentStanding = sortedList.IndexOf(team) + 1;
             newTeamDisplay.InitializeDisplay(team, maxScore);
+            newTeamDisplay.ProgressIndicator.value = team.CurrentScore;
             _instances.Add(newTeamDisplay);
         }
         WinnerText.text = $"Congrats {sortedList.First().TeamName} you won!";

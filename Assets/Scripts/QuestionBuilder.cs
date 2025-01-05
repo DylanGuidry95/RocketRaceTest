@@ -37,7 +37,7 @@ public class QuestionBuilder : MonoBehaviour
             throw new Exception("Question failed to build properly");
     }
 
-    public IEnumerator AudioPlay(int delay, float repetitions)
+    public IEnumerator AudioPlay(float delay, float repetitions)
     {
         for (int i = 0; i < repetitions; i++)
         {
