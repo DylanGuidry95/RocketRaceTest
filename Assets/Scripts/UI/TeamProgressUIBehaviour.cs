@@ -18,6 +18,7 @@ public class TeamProgressUIBehaviour : MonoBehaviour
     {
         _linkedTeam = data;
         TeamLabel.text = data.TeamName;
+        TeamLabel.color = data.TeamColor;
         Rocket.color = data.TeamColor;
         ProgressIndicator.maxValue = maxProgress;
         ProgressIndicator.minValue = 0;

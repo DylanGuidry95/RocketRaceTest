@@ -38,6 +38,8 @@ public class GameManager : MonoBehaviour
     public Button StartGameButton;
     public Button ReturnHomButton;
     public Button ReadyQuestionButton;
+    public Button ExitGameButton;
+    public Button ResetGameButton;
 
     public GameObject MainMenu;
     public GameObject GameSetUp;
@@ -58,12 +60,13 @@ public class GameManager : MonoBehaviour
     private QuestionBuilder _questionBuilder => FindObjectOfType<QuestionBuilder>();
     private RoundOverUIBehaviour _roundBreak => FindObjectOfType<RoundOverUIBehaviour>();
     private ReviewScreenUIBehaviour _reviewScreen => ReviewScreen.GetComponent<ReviewScreenUIBehaviour>();
+    private GameOverUIBehaviour _gameOverScreen => GameOverScreen.GetComponent<GameOverUIBehaviour>();
     private string Feedback => (_activeTeam.IsBoosted) ? "CORRECT" : "INCORRECT";
 
     private void DisplayQuestion()
     {        
         _activeQuestion = _questionBuilder.LoadQuestion(_activeCategory, 3);
-        QuestionUI.InitializeQuestion(_activeQuestion);
+        QuestionUI.InitializeQuestion(_activeQuestion, _activeTeam);
     }
 
     private void SubmitAnswer(AnswerObject answer)
@@ -132,7 +135,9 @@ public class GameManager : MonoBehaviour
         _gameFlow.DefineTransition(_reveiewQuestionState, _activeQuestionState, new[] { readyNextQuestionCondition, reviewCompleteCondition });
 
         _gameFlow.DefineTransition(_roundEndState, _gameOverState = new GameOver(), new[] { roundLimitReachedCondition }, 1);
-        _gameFlow.DefineTransition(_roundEndState, _activeQuestionState, new[] { readyNextQuestionCondition });        
+        _gameFlow.DefineTransition(_roundEndState, _activeQuestionState, new[] { readyNextQuestionCondition });
+
+        _gameFlow.DefineTransition(_gameOverState, _mainMenuState, new[] { menuCondition });
 
         //Add Parameters
         _gameFlow.AddParameter(_gameComplete);
@@ -153,7 +158,11 @@ public class GameManager : MonoBehaviour
 
         InitializeGameFlow();
 
-        _mainMenuState.OnStateEnter = () => MainMenu.SetActive(true);
+        _mainMenuState.OnStateEnter = () =>
+        {
+            MainMenu.SetActive(true);
+            _teams = new List<TeamObject>();            
+        };
         _mainMenuState.OnStateExit = () => MainMenu.SetActive(false);
 
         _teamSetupState.OnStateEnter = () => GameSetUp.SetActive(true);
@@ -161,6 +170,7 @@ public class GameManager : MonoBehaviour
         {
             GameSetUp.SetActive(false);
             _activeCategory = _setUpBeahiourRef.GetQuestionCategory();
+            _setUpBeahiourRef.ClearScreen();
         };
 
         _gamePrepState.OnStateEnter = () =>
@@ -229,7 +239,12 @@ public class GameManager : MonoBehaviour
             GamePrep.SetActive(false);            
         };
 
-        _gameOverState.OnStateEnter = () => GameOverScreen.SetActive(true);
+        _gameOverState.OnStateEnter = () =>
+        {
+            GameOverScreen.SetActive(true);
+            _gameOverScreen.DisplayStandings(_teams.ToArray(), PointsForCorrectAnswer * NumberOfRounds);
+        };
+        _gameOverState.OnStateExit= () => GameOverScreen.SetActive(false);
 
         GameSetUpButton.onClick.AddListener(() => _gameFlow.SetTrigger("ToGameSetUp"));
 
@@ -256,6 +271,12 @@ public class GameManager : MonoBehaviour
             _gameFlow.SetTrigger("ReviewComplete");
             GetNextTeam();
         });
+
+        ExitGameButton.onClick.AddListener(() => Application.Quit());
+        ExitGameButton.gameObject.SetActive(Application.platform == RuntimePlatform.WindowsPlayer);
+
+
+        ResetGameButton.onClick.AddListener(() => _gameFlow.SetTrigger("ToMenu"));
     }
 
     private void Start()

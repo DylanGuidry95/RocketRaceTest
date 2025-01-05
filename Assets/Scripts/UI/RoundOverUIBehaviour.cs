@@ -12,7 +12,7 @@ public class RoundOverUIBehaviour : MonoBehaviour
     public Button ContinueButton;    
 
     public void BuildDisplay(TeamObject[] teams, int maxPoints)
-    { 
+    {         
         _progressDisplays = new List<TeamProgressUIBehaviour>();
         foreach (var team in teams) 
         {
@@ -28,6 +28,15 @@ public class RoundOverUIBehaviour : MonoBehaviour
         {
             team.UpdateDisplay();
         }
+    }
+
+    public void CleanDisplays()
+    {
+        foreach(var team in _progressDisplays)
+        {
+            Destroy(team.gameObject);
+        }
+        _progressDisplays = new List<TeamProgressUIBehaviour>();
     }
 
     private void Update()

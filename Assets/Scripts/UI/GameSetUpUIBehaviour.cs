@@ -97,4 +97,15 @@ public class GameSetUpUIBehaviour : MonoBehaviour
     {
         return (QuestionType)Enum.Parse(typeof(QuestionType), CategorySelection.options[CategorySelection.value].text);
     }
+
+    public void ClearScreen()
+    {
+        foreach(var item in _activeTeams)
+        {
+            Destroy(item.gameObject);
+        }
+        _activeTeams.Clear();
+        NumberOfTeams.value = 0;
+        CategorySelection.value = 0;
+    }
 }

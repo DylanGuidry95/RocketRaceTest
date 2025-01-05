@@ -15,9 +15,10 @@ public class QuestionUIBehaviour : MonoBehaviour
 
     private List<AnswerUIBehaviour> _activeAnswers;
 
-    public void InitializeQuestion(QuestionObject question)
+    public void InitializeQuestion(QuestionObject question, TeamObject data)
     {
-        QuestionHeader.text = question.QuestionPrompt;
+        QuestionHeader.richText = true;
+        QuestionHeader.text = $"<color=#{ColorUtility.ToHtmlStringRGB(data.TeamColor)}>{data.TeamName}</color> {question.QuestionPrompt}";
         var answers = new List<AnswerObject>() { question.CorrectAnswer };
         answers.AddRange(question.Distractors);
         

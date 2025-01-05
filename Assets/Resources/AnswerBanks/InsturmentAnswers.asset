@@ -16,28 +16,22 @@ MonoBehaviour:
   QuestionPrompt: Guess the Insturment
   AnswerObjectsBank:
   - Audio: {fileID: 8300000, guid: 2cb3cd7484394f34aa11526bc4cd3659, type: 3}
-    AnswerLabel: 30_woodwind_flute_sensualizando_Dmin
-    AnswerImage: {fileID: 0}
-  - Audio: {fileID: 8300000, guid: 44b55c415d1394b4c9b57b009198b314, type: 3}
-    AnswerLabel: AHA_BS_80_trumpet_stack_loop_postman_Bm
+    AnswerLabel: Woodwind Flute
     AnswerImage: {fileID: 0}
   - Audio: {fileID: 8300000, guid: 27e86e92c8145a04d9f1b13fa3b354f5, type: 3}
-    AnswerLabel: AHA_CC_80_trumpet_stack_loop_wrong_turn_A#m
+    AnswerLabel: Trumpet
     AnswerImage: {fileID: 0}
   - Audio: {fileID: 8300000, guid: e636004eb0baaf94381c8db1a611133a, type: 3}
-    AnswerLabel: AR_BNS40_bansuri_processed_tantra_G#min
+    AnswerLabel: Tantra
     AnswerImage: {fileID: 0}
   - Audio: {fileID: 8300000, guid: a55cf7933b281cc46b18ce6bfa0894e0, type: 3}
-    AnswerLabel: BRASS 1
-    AnswerImage: {fileID: 0}
-  - Audio: {fileID: 8300000, guid: 3c885e572aaad3f49b2b97d033ec0d6d, type: 3}
-    AnswerLabel: Conga
+    AnswerLabel: BRASS
     AnswerImage: {fileID: 0}
   - Audio: {fileID: 8300000, guid: 581cd91a85872794cb3070eeab90819a, type: 3}
-    AnswerLabel: Conga 2
+    AnswerLabel: Conga
     AnswerImage: {fileID: 0}
   - Audio: {fileID: 8300000, guid: ed1e5824f317ff54690ff85eca19e1f6, type: 3}
-    AnswerLabel: CPA_LRH15_organ_church_pew_Am
+    AnswerLabel: Church Organ
     AnswerImage: {fileID: 0}
   - Audio: {fileID: 8300000, guid: 93332c52c22e1c9458d654c2c68063c9, type: 3}
     AnswerLabel: 'Drum Kit '
@@ -49,67 +43,34 @@ MonoBehaviour:
     AnswerLabel: Eletric guitar
     AnswerImage: {fileID: 0}
   - Audio: {fileID: 8300000, guid: 2ed619b91af3f8940919c869b0a73553, type: 3}
-    AnswerLabel: GIO_CGTR_80_classical_guitar_riff_kurd_moving_Dmin
+    AnswerLabel: Classical Guitar
     AnswerImage: {fileID: 0}
   - Audio: {fileID: 8300000, guid: b0cf8bc3a30ede549adfe90c7215217b, type: 3}
-    AnswerLabel: jc_evt_90_narrow_streets_loop_guitar_Amin
-    AnswerImage: {fileID: 0}
-  - Audio: {fileID: 8300000, guid: 6e751cef5f9b600459eca117bfa11e42, type: 3}
-    AnswerLabel: "KLAVI\u0301R 1"
+    AnswerLabel: Loop Guitar
     AnswerImage: {fileID: 0}
   - Audio: {fileID: 8300000, guid: 5ebc13eb1614cb44492b62fab5a8c496, type: 3}
-    AnswerLabel: "KLAVI\u0301R 2"
-    AnswerImage: {fileID: 0}
-  - Audio: {fileID: 8300000, guid: 98fe7a5dcbe091a48a51162264cdb78a, type: 3}
-    AnswerLabel: KYTARA 1
+    AnswerLabel: "KLAVI\u0301R"
     AnswerImage: {fileID: 0}
   - Audio: {fileID: 8300000, guid: 006a06e6ae560334baa3df9935c93e60, type: 3}
-    AnswerLabel: KYTARA 2
-    AnswerImage: {fileID: 0}
-  - Audio: {fileID: 8300000, guid: dd3a9ce0cd1dc5e4d9230b1dfa5fdd90, type: 3}
-    AnswerLabel: MNT_MW_oboe_exhausted_Am
+    AnswerLabel: KYTARA
     AnswerImage: {fileID: 0}
   - Audio: {fileID: 8300000, guid: c1e8058c59db78f4eb8b2ee851b4a028, type: 3}
-    AnswerLabel: MNT_MW_oboe_needy_Am
-    AnswerImage: {fileID: 0}
-  - Audio: {fileID: 8300000, guid: 540121626eb9df74491413561ad4758c, type: 3}
-    AnswerLabel: MNT_MW_oboe_rhapsodic_Em
-    AnswerImage: {fileID: 0}
-  - Audio: {fileID: 8300000, guid: c375ab2561ea446449116ec5abda1b85, type: 3}
-    AnswerLabel: SAX 1
+    AnswerLabel: Oboe
     AnswerImage: {fileID: 0}
   - Audio: {fileID: 8300000, guid: 5d07e0c6c7cd3f841a7406306cead5ad, type: 3}
-    AnswerLabel: SAX 2
+    AnswerLabel: SAX
     AnswerImage: {fileID: 0}
   - Audio: {fileID: 8300000, guid: e5803a24126db3544b2606c9763be410, type: 3}
-    AnswerLabel: SD_TSS28_organ_church_chords_hits_holds_gospel_Ebmin
-    AnswerImage: {fileID: 0}
-  - Audio: {fileID: 8300000, guid: 5937caed4ce60724eb245dc9f92cf153, type: 3}
-    AnswerLabel: SOULSURPLUS_reverence_melodic_loop_08_organ_chords_church10bpm_Ebmaj
+    AnswerLabel: Church Organ
     AnswerImage: {fileID: 0}
   - Audio: {fileID: 8300000, guid: 46fa2044b8c13454cae930384e5d215a, type: 3}
-    AnswerLabel: SYNTH 02
-    AnswerImage: {fileID: 0}
-  - Audio: {fileID: 8300000, guid: f155c5bcd46926d4098dc18adf8e236f, type: 3}
-    AnswerLabel: SYNTHS 1
+    AnswerLabel: SYNTH
     AnswerImage: {fileID: 0}
   - Audio: {fileID: 8300000, guid: 6a39374feeb3a6745a7d09ef631aeafb, type: 3}
-    AnswerLabel: Trombone 1
-    AnswerImage: {fileID: 0}
-  - Audio: {fileID: 8300000, guid: 5fd81df7cef0ecf4384f70b601093501, type: 3}
-    AnswerLabel: Trombone 2
+    AnswerLabel: Trombone
     AnswerImage: {fileID: 0}
   - Audio: {fileID: 8300000, guid: 0152f22b9766a7740b0998944103ab2e, type: 3}
-    AnswerLabel: Violin 1
-    AnswerImage: {fileID: 0}
-  - Audio: {fileID: 8300000, guid: 47e6e1f3fe5a505469bb1618b1f1a211, type: 3}
-    AnswerLabel: VIOLIN 1
-    AnswerImage: {fileID: 0}
-  - Audio: {fileID: 8300000, guid: cff2bac7adf2e574d930c0404830a12f, type: 3}
-    AnswerLabel: Violin 2
-    AnswerImage: {fileID: 0}
-  - Audio: {fileID: 8300000, guid: 506f82e48875199468b40db3d147e029, type: 3}
-    AnswerLabel: VIOLIN 2
+    AnswerLabel: Violin
     AnswerImage: {fileID: 0}
   - Audio: {fileID: 8300000, guid: 853fac14a95a0e74aadde2a320eb1ca0, type: 3}
     AnswerLabel: ACCORDIAN
